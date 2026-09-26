@@ -1,0 +1,61 @@
+product_id,product_name,category,unit_price
+1,Home & Kitchen Item 1,Beauty,2520.33
+2,Grocery Item 2,Sports,10806.83
+3,Electronics Item 3,Beauty,11882.23
+4,Books Item 4,Fashion,9202.83
+5,Toys Item 5,Toys,7777.2
+6,Home & Kitchen Item 6,Toys,10071.58
+7,Fashion Item 7,Fashion,7213.54
+8,Books Item 8,Electronics,3984.96
+9,Books Item 9,Grocery,11330.73
+10,Beauty Item 10,Sports,8778.25
+11,Electronics Item 11,Sports,9839.54
+12,Books Item 12,Electronics,10049.68
+13,Grocery Item 13,Sports,2478.94
+14,Sports Item 14,Home & Kitchen,9616.44
+15,Sports Item 15,Beauty,9257.53
+16,Books Item 16,Fashion,7224.39
+17,Grocery Item 17,Beauty,6295.52
+18,Grocery Item 18,Books,11451.47
+19,Home & Kitchen Item 19,Grocery,7969.31
+20,Beauty Item 20,Home & Kitchen,13766.86
+21,Home & Kitchen Item 21,Electronics,12448.56
+22,Books Item 22,Fashion,2550.77
+23,Grocery Item 23,Home & Kitchen,10236.08
+24,Grocery Item 24,Home & Kitchen,13493.35
+25,Grocery Item 25,Electronics,6855.59
+26,Toys Item 26,Grocery,8501.84
+27,Grocery Item 27,Sports,10876.6
+28,Toys Item 28,Sports,12264.97
+29,Books Item 29,Home & Kitchen,773.86
+30,Beauty Item 30,Home & Kitchen,8162.88
+31,Electronics Item 31,Home & Kitchen,14793.43
+32,Grocery Item 32,Electronics,4376.94
+33,Fashion Item 33,Fashion,11510.6
+34,Toys Item 34,Beauty,14893.56
+35,Toys Item 35,Grocery,13057.21
+36,Toys Item 36,Toys,1294.81
+37,Fashion Item 37,Beauty,1866.75
+38,Toys Item 38,Fashion,10944.81
+39,Books Item 39,Electronics,11366.83
+40,Sports Item 40,Grocery,10134.82
+41,Toys Item 41,Toys,12367.89
+42,Books Item 42,Grocery,5257.13
+43,Sports Item 43,Books,14067.35
+44,Home & Kitchen Item 44,Electronics,12161.03
+45,Toys Item 45,Electronics,3685.17
+46,Home & Kitchen Item 46,Home & Kitchen,8949.36
+47,Grocery Item 47,Electronics,3745.78
+48,Electronics Item 48,Toys,6639.98
+49,Books Item 49,Electronics,2187.16
+50,Sports Item 50,Books,12255.03
+51,Beauty Item 51,Beauty,3629.11
+52,Fashion Item 52,Books,6261.46
+53,Sports Item 53,Electronics,8394.66
+54,Fashion Item 54,Toys,8381.73
+55,Electronics Item 55,Beauty,14129.58
+56,Toys Item 56,Beauty,10474.69
+57,Toys Item 57,Fashion,4567.64
+58,Fashion Item 58,Grocery,3689.67
+59,Books Item 59,Sports,12877.22
+60,Fashion Item 60,Grocery,13729.56

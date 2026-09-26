@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ETL Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============================== RAIL ============================== -->
+  <aside class="rail">
+    <div class="rail__brand">
+      <span class="rail__brand-mark"></span>
+      <span class="rail__brand-text">ETL CONTROL</span>
+    </div>
+    <div class="rail__brand-sub">automated pipeline &amp; warehouse</div>
+
+    <nav>
+      <button class="rail__link is-active" data-view="overview">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="10" width="4" height="7.5"/><rect x="8" y="5.5" width="4" height="12"/><rect x="13.5" y="2.5" width="4" height="15"/></svg>
+        Overview
+      </button>
+      <button class="rail__link" data-view="runs">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+        Run history
+      </button>
+      <button class="rail__link" data-view="data">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="10" cy="4.5" rx="6.5" ry="2.2"/><path d="M3.5 4.5v11c0 1.2 2.9 2.2 6.5 2.2s6.5-1 6.5-2.2v-11"/><path d="M3.5 10c0 1.2 2.9 2.2 6.5 2.2s6.5-1 6.5-2.2"/></svg>
+        Data explorer
+      </button>
+      <button class="rail__link" data-view="sources">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="3" width="15" height="4.5" rx="0.5"/><rect x="2.5" y="9.5" width="15" height="4.5" rx="0.5"/><circle cx="5.5" cy="5.25" r="0.6" fill="currentColor" stroke="none"/><circle cx="5.5" cy="11.75" r="0.6" fill="currentColor" stroke="none"/></svg>
+        Sources
+      </button>
+      <button class="rail__link" data-view="logs">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="2.5" width="15" height="15" rx="1"/><path d="M5.5 7h9M5.5 10h9M5.5 13h6"/></svg>
+        Activity log
+      </button>
+    </nav>
+
+    <div class="rail__foot">
+      Python 3.14-ready &middot; Flask + SQLite<br>
+      auto-run every {{ (auto_interval // 60) }} min
+    </div>
+  </aside>
+
+  <!-- ============================== MAIN ============================== -->
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Overview</h1>
+        <p id="pageSub">Three raw sources, cleaned and loaded into the warehouse on schedule.</p>
+      </div>
+      <div class="topbar__right">
+        <span class="status-pill is-idle" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">idle</span>
+        </span>
+        <button class="btn" id="runBtn">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.5v13l11-6.5z"/></svg>
+          Run pipeline
+        </button>
+      </div>
+    </div>
+
+    <!-- ---------------------------- OVERVIEW ---------------------------- -->
+    <section class="view is-active" id="view-overview">
+
+      <div class="schematic">
+        <p class="schematic__label">PIPELINE SCHEMATIC — sources → extract → transform → validate → load → warehouse</p>
+        <svg id="schematicSvg" viewBox="0 0 940 190" xmlns="http://www.w3.org/2000/svg">
+          <!-- main duct -->
+          <path id="mainDuct" class="duct" d="M90,140 L860,140" />
+          <path class="duct-inner" d="M90,140 L860,140" />
+
+          <!-- source feeder ducts -->
+          <path class="duct" d="M66,40 L90,40 L90,140" stroke-width="6"/>
+          <path class="duct" d="M66,90 L90,90 L90,140" stroke-width="6"/>
+          <path class="duct" d="M66,140 L90,140" stroke-width="6"/>
+
+          <!-- source nodes -->
+          <g>
+            <rect class="node" x="6" y="26" width="60" height="28" rx="3"/>
+            <text class="node-label" x="36" y="44">customers</text>
+          </g>
+          <g>
+            <rect class="node" x="6" y="76" width="60" height="28" rx="3"/>
+            <text class="node-label" x="36" y="94">products</text>
+          </g>
+          <g>
+            <rect class="node" x="6" y="126" width="60" height="28" rx="3"/>
+            <text class="node-label" x="36" y="144">transactions</text>
+          </g>
+
+          <!-- stage nodes along the main duct -->
+          <g class="stage-node" data-stage="extract">
+            <rect class="node" x="150" y="112" width="110" height="56" rx="3"/>
+            <text class="node-label" x="205" y="138">EXTRACT</text>
+            <text class="node-sub" x="205" y="154" id="sub-extract">—</text>
+          </g>
+          <g class="stage-node" data-stage="transform">
+            <rect class="node" x="330" y="112" width="110" height="56" rx="3"/>
+            <text class="node-label" x="385" y="138">TRANSFORM</text>
+            <text class="node-sub" x="385" y="154" id="sub-transform">—</text>
+          </g>
+          <g class="stage-node" data-stage="validate">
+            <rect class="node" x="510" y="112" width="110" height="56" rx="3"/>
+            <text class="node-label" x="565" y="138">VALIDATE</text>
+            <text class="node-sub" x="565" y="154" id="sub-validate">—</text>
+          </g>
+          <g class="stage-node" data-stage="load">
+            <rect class="node" x="690" y="112" width="110" height="56" rx="3"/>
+            <text class="node-label" x="745" y="138">LOAD</text>
+            <text class="node-sub" x="745" y="154" id="sub-load">—</text>
+          </g>
+
+          <!-- warehouse tank -->
+          <g id="warehouseTank">
+            <path class="tank" d="M860,110 h40 a8,8 0 0 1 8,8 v44 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-44 a8,8 0 0 1 8,-8 z"/>
+            <text class="node-label" x="900" y="102">WAREHOUSE</text>
+            <text class="node-sub" x="900" y="176" id="sub-warehouse">—</text>
+          </g>
+
+          <!-- flow particles -->
+          <circle class="flow-dot" r="3.2" style="offset-path: path('M90,140 L860,140');"></circle>
+          <circle class="flow-dot" r="3.2" style="offset-path: path('M90,140 L860,140'); animation-delay: 0.6s;"></circle>
+          <circle class="flow-dot" r="3.2" style="offset-path: path('M90,140 L860,140'); animation-delay: 1.2s;"></circle>
+        </svg>
+      </div>
+
+      <div class="gauges">
+        <div class="gauge" id="gaugeRuns">
+          <p class="gauge__label">TOTAL RUNS</p>
+          <div class="gauge__value"><span id="statRuns">0</span></div>
+        </div>
+        <div class="gauge" id="gaugeSuccess">
+          <p class="gauge__label">SUCCESS RATE</p>
+          <div class="gauge__value"><span id="statSuccess">0</span><span class="gauge__unit">%</span></div>
+          <div class="gauge__bar"><div class="gauge__bar-fill" id="statSuccessBar"></div></div>
+        </div>
+        <div class="gauge" id="gaugeRows">
+          <p class="gauge__label">ROWS LOADED (LIFETIME)</p>
+          <div class="gauge__value"><span id="statRows">0</span></div>
+        </div>
+        <div class="gauge" id="gaugeDuration">
+          <p class="gauge__label">AVG RUN DURATION</p>
+          <div class="gauge__value"><span id="statDuration">0</span><span class="gauge__unit">ms</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Rows loaded per run</h2>
+          <span class="panel__head-sub" id="trendRange">last 20 runs</span>
+        </div>
+        <div class="trend">
+          <svg id="trendSvg" viewBox="0 0 900 64" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E8A33D" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#E8A33D" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="trend-fill" id="trendFill" d=""></path>
+            <path class="trend-line" id="trendLine" d=""></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Recent runs</h2>
+          <span class="panel__head-sub">click a row for stage detail</span>
+        </div>
+        <div class="panel__body table-scroll">
+          <table id="recentRunsTable">
+            <thead><tr><th>Run</th><th>Started</th><th>Trigger</th><th>Status</th><th>Loaded</th><th>Rejected</th><th>Duration</th></tr></thead>
+            <tbody id="recentRunsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------- RUN HISTORY --------------------------- -->
+    <section class="view" id="view-runs">
+      <div class="panel">
+        <div class="panel__head">
+          <h2>All runs</h2>
+          <span class="panel__head-sub" id="runsCount">—</span>
+        </div>
+        <div class="panel__body table-scroll">
+          <table id="allRunsTable">
+            <thead><tr><th></th><th>Run</th><th>Started</th><th>Finished</th><th>Trigger</th><th>Status</th><th>Extracted</th><th>Loaded</th><th>Rejected</th><th>Duration</th></tr></thead>
+            <tbody id="allRunsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------- DATA EXPLORER -------------------------- -->
+    <section class="view" id="view-data">
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Warehouse tables</h2>
+          <span class="panel__head-sub">read-only preview, most recent load</span>
+        </div>
+        <div class="explorer-controls">
+          <select id="tableSelect"></select>
+          <div class="pill-toggle" id="cleanRejectToggle">
+            <button data-mode="clean" class="is-active">Clean rows</button>
+            <button data-mode="rejects">Rejected rows</button>
+          </div>
+          <span class="row-count" id="previewCount"></span>
+        </div>
+        <div class="panel__body table-scroll">
+          <table id="previewTable">
+            <thead id="previewHead"></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------- SOURCES ------------------------------ -->
+    <section class="view" id="view-sources">
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Configured sources</h2>
+          <span class="panel__head-sub">drop in a replacement CSV to feed the next run</span>
+        </div>
+        <div class="sources-grid" id="sourcesGrid">
+          {% for s in sources %}
+          <div class="source-card">
+            <p class="source-card__name">{{ s.name }}</p>
+            <p class="source-card__meta">table: {{ s.table }} &middot; key: {{ s.primary_key }}</p>
+            <label for="upload-{{ s.name }}">Drop a .csv here, or click to choose a file</label>
+            <input type="file" id="upload-{{ s.name }}" accept=".csv" data-source="{{ s.name }}">
+            <p class="source-card__status" id="status-{{ s.name }}"></p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------- ACTIVITY LOG --------------------------- -->
+    <section class="view" id="view-logs">
+      <div class="panel">
+        <div class="panel__head">
+          <h2>Activity log</h2>
+          <span class="panel__head-sub">updates every 3s while this tab is open</span>
+        </div>
+        <div class="terminal" id="terminal"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
