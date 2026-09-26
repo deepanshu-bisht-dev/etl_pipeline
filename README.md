@@ -34,25 +34,6 @@ risk when you're demoing on the latest Python. A plain `threading` loop gives
 you the same "runs on a schedule" story, with none of that risk, and every
 line of it is something you can actually explain in a viva.
 
----
-
-## 🖼️ Screenshots
-
-> _Add your own dashboard screenshots/GIF here — the pipeline schematic
-> animating live during a run is the money shot for LinkedIn._
-
-<div align="center">
-
-<!-- ![Dashboard Overview](docs/screenshot-overview.png) -->
-<!-- ![Live Pipeline Run](docs/screenshot-run.gif) -->
-
-**📸 Dashboard overview — _add screenshot here_**
-
-**🎥 Live pipeline run — _add GIF here_**
-
-</div>
-
----
 
 ## ✨ What it actually does
 
