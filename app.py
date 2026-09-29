@@ -5,7 +5,7 @@ Serves the dashboard UI and the small set of internal JSON endpoints the
 dashboard's JavaScript polls to show live pipeline status. This is not a
 public API product — it's the backend for the one bundled dashboard page.
 
-Run with:  python run.py
+Run with -  python run.py
 """
 import os
 import sqlite3
